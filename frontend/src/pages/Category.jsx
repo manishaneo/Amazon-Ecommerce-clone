@@ -6,16 +6,16 @@ import ProductCard from "../components/ProductCard";
 const Category = () => {
   const { categoryName } = useParams();
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
+  const query = new URLSearchParams(location.search);
 
-  const search = queryParams.get("search");
-  const min = queryParams.get("min");
-  const max = queryParams.get("max");
+  const search = query.get("search");
+  const min = query.get("min");
+  const max = query.get("max");
 
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const loadProducts = async () => {
+    const load = async () => {
       const res = await fetchProducts({
         category: categoryName !== "all" ? categoryName : undefined,
         search,
@@ -26,16 +26,14 @@ const Category = () => {
       setProducts(res.data);
     };
 
-    loadProducts();
+    load();
   }, [categoryName, search, min, max]);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h2 className="text-xl font-bold mb-4 capitalize">
-        {categoryName}
-      </h2>
+    <div className="bg-gray-100 min-h-screen px-6 py-10">
+      <h2 className="text-2xl font-bold capitalize mb-6">{categoryName}</h2>
 
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((p) => (
           <ProductCard key={p._id} product={p} />
         ))}

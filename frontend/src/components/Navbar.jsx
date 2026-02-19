@@ -13,21 +13,25 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-black text-white p-4 flex justify-between items-center">
-      <h1 onClick={() => navigate("/")} className="cursor-pointer">
+    <div className="bg-[#131921] text-white px-6 py-3 flex items-center justify-between">
+      <h1
+        className="text-xl font-bold cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         Amazon
       </h1>
 
-      <form onSubmit={handleSearch} className="w-1/2">
+      <form onSubmit={handleSearch} className="w-1/2 mx-6">
         <input
-          className="w-full p-2 text-black"
-          placeholder="Search..."
+          type="text"
+          placeholder="Search products..."
+          className="w-full px-4 py-2 rounded text-black"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </form>
 
-      <div>Cart</div>
+      <div className="font-semibold cursor-pointer">Cart</div>
     </div>
   );
 };

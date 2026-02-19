@@ -7,34 +7,46 @@ const Home = () => {
   const [appliances, setAppliances] = useState([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      const [electronicsRes, appliancesRes] = await Promise.all([
+    const load = async () => {
+      const [e, a] = await Promise.all([
         fetchProducts({ category: "electronics" }),
         fetchProducts({ category: "home-appliances" }),
       ]);
 
-      setElectronics(electronicsRes.data);
-      setAppliances(appliancesRes.data);
+      setElectronics(e.data);
+      setAppliances(a.data);
     };
 
-    loadData();
+    load();
   }, []);
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h2 className="text-xl font-bold mb-4">Electronics</h2>
-      <div className="grid grid-cols-4 gap-6 mb-10">
-        {electronics.map((p) => (
-          <ProductCard key={p._id} product={p} />
-        ))}
+    <div className="bg-gray-100 min-h-screen">
+
+      <div className="bg-gradient-to-r from-yellow-400 to-yellow-300 py-10 text-center text-xl font-semibold">
+        Deals on Electronics & Home Appliances
       </div>
 
-      <h2 className="text-xl font-bold mb-4">Home Appliances</h2>
-      <div className="grid grid-cols-4 gap-6">
-        {appliances.map((p) => (
-          <ProductCard key={p._id} product={p} />
-        ))}
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <h2 className="text-xl font-bold mb-6">Electronics</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {electronics.map((p) => (
+            <ProductCard key={p._id} product={p} />
+          ))}
+        </div>
       </div>
+
+      <div className="max-w-7xl mx-auto px-6 pb-10">
+        <h2 className="text-xl font-bold mb-6">Home Appliances</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {appliances.map((p) => (
+            <ProductCard key={p._id} product={p} />
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 };
