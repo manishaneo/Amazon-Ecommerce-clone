@@ -16,8 +16,8 @@ export const getProducts = async (req, res) => {
 
   if (min || max) {
     query.price = {};
-    if (min) query.price.$gte = Number(min);
-    if (max) query.price.$lte = Number(max);
+    if (min) query.price.$gte = Number(min);//greater than or equal 
+    if (max) query.price.$lte = Number(max);//less than or equal
   }
 
   const products = await Product.find(query);
