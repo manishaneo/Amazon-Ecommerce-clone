@@ -17,23 +17,21 @@ const Category = () => {
   useEffect(() => {
     const load = async () => {
       const res = await fetchProducts({
-        category: categoryName !== "all" ? categoryName : undefined,
+        category: categoryName,
         search,
         min,
         max,
       });
-
       setProducts(res.data);
     };
-
     load();
   }, [categoryName, search, min, max]);
 
   return (
-    <div className="bg-gray-100 min-h-screen px-6 py-10">
+    <div className="px-6 py-10 bg-gray-100 min-h-screen">
       <h2 className="text-2xl font-bold capitalize mb-6">{categoryName}</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((p) => (
           <ProductCard key={p._id} product={p} />
         ))}
