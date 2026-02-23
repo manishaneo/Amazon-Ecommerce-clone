@@ -1,17 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { InventoryProvider } from "./inventory/InventoryContext";
+import { CartProvider } from "./cart/CartContext";
+
 import Home from "./pages/Home";
-import Category from "./pages/Category";
+import Cart from "./pages/Cart";
+import AdminAddProduct from "./admin/AdminAddProduct";
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/category/:categoryName" element={<Category />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <InventoryProvider>
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/admin" element={<AdminAddProduct />} />
+          </Routes>
+        </CartProvider>
+      </InventoryProvider>
+    </BrowserRouter>
   );
 }
 

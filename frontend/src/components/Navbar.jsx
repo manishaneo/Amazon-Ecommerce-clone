@@ -1,33 +1,29 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../cart/CartContext";
 
 const Navbar = () => {
-  const [search, setSearch] = useState("");
-  const navigate = useNavigate();
+  const { cart } = useCart();
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(`/category/all?search=${search}`);
-    }
-  };
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.cartQty,
+    0
+  );
 
   return (
-    <div className="bg-black text-white p-4 flex justify-between items-center">
-      <h1 onClick={() => navigate("/")} className="cursor-pointer">
-        Amazon
-      </h1>
+    <div className="bg-gray-900 text-white px-6 py-3 flex justify-between items-center">
+      <Link to="/" className="text-xl font-bold">
+        amazon<span className="text-yellow-400">.clone</span>
+      </Link>
 
-      <form onSubmit={handleSearch} className="w-1/2">
-        <input
-          className="w-full p-2 text-black"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </form>
-
-      <div>Cart</div>
+      <Link to="/cart" className="relative flex items-center">
+        <span className="text-xl">🛒</span>
+        {totalItems > 0 && (
+          <span className="absolute -top-2 -right-3 bg-yellow-400 text-black text-xs font-bold rounded-full px-2">
+            {totalItems}
+          </span>
+        )}
+        <span className="ml-2">Cart</span>
+      </Link>
     </div>
   );
 };
