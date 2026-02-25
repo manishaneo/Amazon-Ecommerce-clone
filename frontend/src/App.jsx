@@ -1,25 +1,25 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { InventoryProvider } from "./inventory/InventoryContext";
-import { CartProvider } from "./cart/CartContext";
 
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import AdminAddProduct from "./admin/AdminAddProduct";
+import AdminInventory from "./admin/AdminInventory";
+import Navbar from "./components/Navbar";
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
-      <InventoryProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/admin" element={<AdminAddProduct />} />
-          </Routes>
-        </CartProvider>
-      </InventoryProvider>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/admin" element={<AdminAddProduct />} />
+        <Route path="/admin/inventory" element={<AdminInventory />} />
+        <Route path="*" element={<p className="p-6">Page Not Found</p>} />
+      </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

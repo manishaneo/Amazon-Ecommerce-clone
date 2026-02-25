@@ -1,7 +1,8 @@
 import { useInventory } from "../inventory/InventoryContext";
 import { useCart } from "../cart/CartContext";
-
+import {useTheme} from "../context/ThemeContext";
 const ProductCard = ({ product }) => {
+  const {theme}=useTheme();
   if (!product) return null;
 
   const { buyProduct } = useInventory();
@@ -12,12 +13,12 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = () => {
     if (soldOut) return;
 
-    addToCart(product);        // 🛒 cart
-    buyProduct(product._id);  // 📦 inventory
+    addToCart(product);        
+    buyProduct(product._id);  
   };
 
   return (
-    <div className="border p-4">
+    <div className="card p-4 ">
       <h3 className="font-semibold">{product.title}</h3>
       <p>Available: {product.quantity}</p>
 

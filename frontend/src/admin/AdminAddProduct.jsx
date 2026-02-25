@@ -3,68 +3,61 @@ import { useInventory } from "../inventory/InventoryContext";
 import { useNavigate } from "react-router-dom";
 
 const AdminAddProduct = () => {
-  const { addProduct } = useInventory();
+  const { addProduct, addInventory, fetchInventory } = useInventory();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
     title: "",
+    brand: "",
     category: "",
-    quantity: "",
+    price: "",
+    image: "",
+    description: "",
   });
 
-  const submitHandler = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
 
-    addProduct({
-  _id: Date.now().toString(),
-  title: form.title,
-  category: form.category,
-  quantity: Number(form.quantity),
-  image:
-    "https://m.media-amazon.com/images/I/71n3Kd9GMZL._AC_UF1000,1000_QL80_.jpg",
-});
+    try {
+      
+      const product = await addProduct(form);
 
-    // ✅ Redirect to Home (same session)
-    navigate("/");
+      
+      await addInventory(product._id);
 
-    setForm({ title: "", category: "", quantity: "" });
+      
+      await fetchInventory();
+
+      alert("✅ Product added successfully");
+      navigate("/"); 
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error adding product");
+    }
   };
 
   return (
-    <div className="p-6 max-w-md">
-      <h2 className="text-xl font-bold mb-4">Admin – Add Product</h2>
+    <form
+      onSubmit={submit}
+      className="max-w-md mx-auto p-6 grid gap-3"
+    >
+      <h2 className="text-xl font-bold">Admin – Add Product</h2>
 
-      <form onSubmit={submitHandler} className="space-y-3">
+      {Object.keys(form).map((key) => (
         <input
-          placeholder="Product Name"
-          className="border p-2 w-full"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-          required
+          key={key}
+          placeholder={key}
+          className="border p-2 rounded"
+          onChange={(e) =>
+            setForm({ ...form, [key]: e.target.value })
+          }
         />
+      ))}
 
-        <input
-          placeholder="Category (television)"
-          className="border p-2 w-full"
-          value={form.category}
-          onChange={(e) => setForm({ ...form, category: e.target.value })}
-          required
-        />
-
-        <input
-          type="number"
-          placeholder="Quantity (2 or 3)"
-          className="border p-2 w-full"
-          value={form.quantity}
-          onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-          required
-        />
-
-        <button className="bg-blue-600 text-white px-4 py-2 w-full">
-          Add Product
-        </button>
-      </form>
-    </div>
+      <button className="bg-yellow-400 py-2 font-bold rounded">
+        Add Product
+      </button>
+    </form>
   );
 };
 
