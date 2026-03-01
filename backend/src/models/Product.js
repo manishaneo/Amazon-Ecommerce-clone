@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
   title: String,
@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   rating: Number,
   image: String,
   description: String,
-  images: [String]   // For product details gallery
+  images: [String]
 });
 
-module.exports = mongoose.model("Product", productSchema);
+export default mongoose.model("Product", productSchema);

@@ -1,13 +1,14 @@
-const Product = require("../models/Product");
+import Product from "../models/Product.js";
 
-exports.addProduct = async (req, res) => {
+export const addProduct = async (req, res) => {
   const product = new Product(req.body);
   await product.save();
   res.json({ message: "Product added successfully" });
 };
 
-exports.getProducts = async (req, res) => {
+export const getProducts = async (req, res) => {
   const { search, category, min, max } = req.query;
+
   let query = {};
 
   if (search) query.title = { $regex: search, $options: "i" };
@@ -15,15 +16,15 @@ exports.getProducts = async (req, res) => {
 
   if (min || max) {
     query.price = {};
-    if (min) query.price.$gte = Number(min);
-    if (max) query.price.$lte = Number(max);
+    if (min) query.price.$gte = Number(min);//greater than or equal 
+    if (max) query.price.$lte = Number(max);//less than or equal
   }
 
   const products = await Product.find(query);
   res.json(products);
 };
 
-exports.getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
   const product = await Product.findById(req.params.id);
   res.json(product);
 };

@@ -1,0 +1,62 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../utils/logout";
+
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-4xl mx-auto">
+
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Welcome to GG Life{user ? `, ${user.firstname}!` : "!"}
+          </h1>
+
+          <button
+            onClick={() => logout(navigate)}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Logout
+          </button>
+        </div>
+        {user && (
+          <>
+            <p className="text-gray-600 mt-2">
+              You have successfully logged in as
+              <span className="font-semibold">{user?.email}</span>.
+            </p>
+          </>
+        )}
+
+        <div className="mt-6 bg-white rounded-xl shadow p-6">
+          <h2 className="text-xl font-semibold">
+            Dashboard
+          </h2>
+
+          <p className="text-gray-500 mt-2">
+            This is the GG Life dashboard area.
+          </p>
+
+          <div className="mt-6 flex gap-4">
+            <button 
+            onClick={()=>navigate("/chat")}
+            className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
+              Inbox
+            </button>
+          </div>
+        </div>
+      </div>
+    </div >
+  );
+}

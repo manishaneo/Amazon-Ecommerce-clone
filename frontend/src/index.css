@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@layer base {
+  input,
+  select,
+  textarea {
+    @apply text-black bg-white;
+  }
+}

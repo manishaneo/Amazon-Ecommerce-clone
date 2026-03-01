@@ -1,29 +1,62 @@
-import { createContext, useContext, useState } from "react";
-import initialProducts from "../data/products";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 
 const InventoryContext = createContext();
+const API = "http://localhost:5000/api";
 
 export const InventoryProvider = ({ children }) => {
-  const [products, setProducts] = useState(initialProducts);
+  const [inventory, setInventory] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Admin adds product
-  const addProduct = (product) => {
-    setProducts((prev) => [...prev, product]);
+  const fetchInventory = async () => {
+    const res = await axios.get(`${API}/inventory`);
+    setInventory(res.data);
+    setLoading(false);
   };
 
-  // User buys product → quantity decreases
-  const buyProduct = (id) => {
-    setProducts((prev) =>
-      prev.map((p) =>
-        p._id === id && p.quantity > 0
-          ? { ...p, quantity: p.quantity - 1 }
-          : p
-      )
-    );
+  useEffect(() => {
+    fetchInventory();
+  }, []);
+
+  
+  const addProduct = async (productData) => {
+    const res = await axios.post(`${API}/products`, productData);
+
+   
+    const products = await axios.get(`${API}/products`);
+    const createdProduct = products.data.at(-1);
+
+    return createdProduct; 
+  };
+
+  
+  const addInventory = async (productId) => {
+    await axios.post(`${API}/inventory`, {
+      productId,
+      stock: 3,
+    });
+  };
+
+   const restockSingle = async (productId, amount = 1) => {
+    await axios.post(`${API}/inventory/restock`, {
+      productId,
+      amount,
+    });
+
+    fetchInventory();
   };
 
   return (
-    <InventoryContext.Provider value={{ products, addProduct, buyProduct }}>
+    <InventoryContext.Provider
+      value={{
+        inventory,
+        loading,
+        fetchInventory,
+        addProduct,
+        addInventory,
+        restockSingle,
+      }}
+    >
       {children}
     </InventoryContext.Provider>
   );
