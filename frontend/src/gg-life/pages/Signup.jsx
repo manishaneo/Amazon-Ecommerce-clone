@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { AMAZON_API, GGLIFE_API } from "../../config/api";
 import {
   nameRegex,
   emailRegex,
@@ -107,12 +107,20 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      // Signup
-      const response = await fetch("http://localhost:5000/api/auth/signup", {
+     const service = "gglife"; 
+
+    const baseURL =
+      service === "amazon" ? AMAZON_API : GGLIFE_API;
+
+    // Signup
+    const response = await fetch(
+      `${baseURL}/api/auth/signup`,
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
-      });
+      }
+    );
 
       const data = await response.json();
 
