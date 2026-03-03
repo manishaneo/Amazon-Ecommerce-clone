@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AMAZON_API, GGLIFE_API } from "../../config/api";
+// import { AMAZON_API, GGLIFE_API } from "../../config/api";
 import {
   nameRegex,
   emailRegex,
@@ -107,20 +107,16 @@ export default function Signup() {
     setLoading(true);
 
     try {
-     const service = "gglife"; 
+      //signup
+      const response = await fetch(
+        "http://localhost:5000/api/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }
+      );
 
-    const baseURL =
-      service === "amazon" ? AMAZON_API : GGLIFE_API;
-
-    // Signup
-    const response = await fetch(
-      `${baseURL}/api/auth/signup`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      }
-    );
 
       const data = await response.json();
 
@@ -189,8 +185,8 @@ export default function Signup() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full px-4 py-3 border rounded-lg ${errors.firstname && touched.firstname
-                    ? "border-red-500"
-                    : "focus:ring-green-600"
+                  ? "border-red-500"
+                  : "focus:ring-green-600"
                   }`}
               />
               {errors.firstname && touched.firstname && (
@@ -208,8 +204,8 @@ export default function Signup() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full px-4 py-3 border rounded-lg ${errors.lastname && touched.lastname
-                    ? "border-red-500"
-                    : "focus:ring-green-600"
+                  ? "border-red-500"
+                  : "focus:ring-green-600"
                   }`}
               />
               {errors.lastname && touched.lastname && (
@@ -228,8 +224,8 @@ export default function Signup() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={`w-full px-4 py-3 border rounded-lg ${errors.email && touched.email
-                ? "border-red-500"
-                : "focus:ring-green-600"
+              ? "border-red-500"
+              : "focus:ring-green-600"
               }`}
           />
           {errors.email && touched.email && (
@@ -257,8 +253,8 @@ export default function Signup() {
             onChange={handleChange}
             onBlur={handleBlur}
             className={`w-full px-4 py-3 border rounded-lg ${errors.password && touched.password
-                ? "border-red-500"
-                : "focus:ring-green-600"
+              ? "border-red-500"
+              : "focus:ring-green-600"
               }`}
           />
           {errors.password && touched.password && (
@@ -271,8 +267,8 @@ export default function Signup() {
             type="submit"
             disabled={loading || hasErrors}
             className={`w-full py-3 rounded-lg font-semibold transition ${loading || hasErrors
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700 text-white"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700 text-white"
               }`}
           >
             {loading ? "Creating Account..." : "Create Account"}

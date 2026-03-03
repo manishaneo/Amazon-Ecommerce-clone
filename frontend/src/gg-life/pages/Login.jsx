@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AMAZON_API , GGLIFE_API} from "../../config/api";
+// import { AMAZON_API , GGLIFE_API} from "../../config/api";
 export default function Login() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -13,75 +13,68 @@ export default function Login() {
   const [isLocked, setIsLocked] = useState(false);
 
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      }
+    );
 
-try {
-  const service = "gglife"; 
+    const data = await response.json();
+    console.log(data);
 
-  const baseURL =
-    service === "amazon" ? AMAZON_API : GGLIFE_API;
+    if (response.ok) {
+      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("user", JSON.stringify(data.data.user));
+      console.log("userdetails", data.data.user)
+      setAttemptsLeft(null);
+      setIsLocked(false);
 
-  const response = await fetch(
-    `${baseURL}/api/auth/login`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    }
-  );
+      if (data.data.user.role === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/amazon");
+      }
 
-  const data = await response.json();
-  console.log(data);
-
-  if (response.ok) {
-    localStorage.setItem("token", data.data.token);
-    localStorage.setItem("user", JSON.stringify(data.data.user));
-    console.log("userdetails", data.data.user)
-    setAttemptsLeft(null);
-    setIsLocked(false);
-
-    if (data.data.user.role === "admin") {
-      navigate("/admin-dashboard");
     } else {
-      navigate("/amazon");
-    }
+      let msg = data.message || "Login failed";
+      if (msg.includes("Account locked")) {
+        msg = "Account locked after 3 attempts. Use Reset Password.";
+      }
 
-  } else {
-    let msg = data.message || "Login failed";
-    if (msg.includes("Account locked")) {
-      msg = "Account locked after 3 attempts. Use Reset Password.";
-    }
+      setError(msg);
+      // reset previous state
+      setAttemptsLeft(null);
 
-    setError(msg);
-    // reset previous state
-    setAttemptsLeft(null);
+      // if backend sends attempts left in message
+      if (msg.includes("Attempts left")) {
+        const match = msg.match(/\d+/); // extract number
+        if (match) {
+          setAttemptsLeft(Number(match[0]));
+        }
+      }
 
-    // if backend sends attempts left in message
-    if (msg.includes("Attempts left")) {
-      const match = msg.match(/\d+/); // extract number
-      if (match) {
-        setAttemptsLeft(Number(match[0]));
+      // if account is locked
+      if (msg.includes("Account locked")) {
+        setIsLocked(true);
+        setAttemptsLeft(0);
       }
     }
-
-    // if account is locked
-    if (msg.includes("Account locked")) {
-      setIsLocked(true);
-      setAttemptsLeft(0);
-    }
+  } catch (err) {
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
   }
-
-} catch (err) {
-  setError("Something went wrong. Please try again.");
-} finally {
-  setLoading(false);
-}
 };
 
 return (
