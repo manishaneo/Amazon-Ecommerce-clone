@@ -5,11 +5,11 @@ import express from "express";
 import cors from "cors";
 
 import connectDB from "./src/config/db.js";
-
 import ProductRoutes from "./src/routes/ProductRoutes.js"
 import InventoryRoutes from "./src/routes/InventoryRoutes.js"
 import router from "./src/routes/authRoute.js";
 import {errorHandler} from "./src/middleware/errorMiddleware.js"
+
 const app = express();
 
 app.use(cors());

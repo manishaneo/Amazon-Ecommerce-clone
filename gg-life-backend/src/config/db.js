@@ -1,11 +1,21 @@
 import mongoose from "mongoose";
 
+let connection = null;
+
 const connectDB = async () => {
+  if (connection) {
+    console.log("Using existing database connection");
+    return connection;
+  }
+
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/amazon_clone");
-    console.log("MongoDB Connected");
+    connection = await mongoose.connect(process.env.MONGO_URI);
+
+    console.log("MongoDB Connected:", connection.connection.host);
+
+    return connection;
   } catch (error) {
-    console.error("DB Error:", error.message);
+    console.error("MongoDB connection error:", error);
     process.exit(1);
   }
 };
